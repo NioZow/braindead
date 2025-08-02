@@ -1,0 +1,28 @@
+[project]
+name = "brainless"
+version = "0.1.0"
+description = "Cuz I want to turn off my brain while staying productive"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mongoengine>=0.29.1",
+    "pydantic>=2.11.7",
+    "pymongo>=4.13.2",
+    "pytest>=8.4.1",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+]
