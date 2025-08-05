@@ -11,7 +11,11 @@ dependencies = [
     "pytest>=8.4.1",
     "python-dotenv>=1.1.1",
     "requests>=2.32.4",
+    "youtube-transcript-api>=1.2.2",
 ]
+
+[project.scripts]
+brainless = "brainless.__main__:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

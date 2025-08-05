@@ -19,6 +19,14 @@ The motivation for this project is that I like to listen to poadcast and watch Y
 - A single command to open a new video to watch in your browser and take notes for it.
 - `MongoDB` database (wanted to try it, never used it before)
 
+## Installation
+
+```sh
+git clone git@gitea.emp:niozow/brainless.git
+cd brainless
+uv tool install .
+```
+
 ## Improvements & Ideas
 
 - Scrape my Twitter feed and ask AI the most important to stop scrolling
