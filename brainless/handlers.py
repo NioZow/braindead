@@ -124,10 +124,17 @@ class PlaylistHandler(Handler):
             required=True,
         )
 
-        playlist_subparsers.add_parser(
+        list = playlist_subparsers.add_parser(
             "list",
             help="List all managed playlists",
             aliases=["ls"],
+        )
+
+        list.add_argument(
+            "--videos",
+            "-v",
+            help="Print all videos of the playlists",
+            action="store_true",
         )
 
         add = playlist_subparsers.add_parser(
@@ -135,7 +142,7 @@ class PlaylistHandler(Handler):
             help="Add a playlist",
         )
 
-        add.add_argument("playlist_id", help="Id of the playlist")
+        add.add_argument("playlist_url", help="Url of the playlist")
 
         remove = playlist_subparsers.add_parser(
             "remove", help="Remove a playlist", aliases=["rm"]
@@ -149,14 +156,26 @@ class PlaylistHandler(Handler):
             {
                 "name": playlist.title,
                 "description": playlist.description,
-                "videos": len(playlist.videos),
+                "videos": len(playlist.videos)
+                if not args.videos
+                else [v.title for v in playlist.videos],
             }
             for playlist in list(Playlist.objects.all())
             if not pattern.match(playlist.title)
         ]
 
     def add(self, args: ArgumentParser):
-        playlist = Playlist.fetch_from_api(playlist_id=args.playlist_id)
+        pattern = re.compile(
+            r"^(?:https:\/\/www\.youtube\.com\/playlist\?list=([\w\d\-]+))$"
+        )
+
+        playlist_id = (
+            match[0] if len(match := pattern.findall(args.playlist_url)) == 1 else None
+        )
+        if not playlist_id:
+            return {"error": "Invalid playlist url"}
+
+        playlist = Playlist.fetch_from_api(playlist_id=playlist_id)
         return {
             "name": playlist.title,
             "description": playlist.description,

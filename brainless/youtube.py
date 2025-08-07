@@ -35,6 +35,7 @@ class Video(Document):
     transcript = StringField()
     updated_at = DateTimeField()
     seen_at = DateTimeField(null=True, default=None)
+    channel = ReferenceField("Channel")
 
     meta = {
         "collection": "videos",
@@ -42,16 +43,20 @@ class Video(Document):
     }
 
     def fetch_transcript(self):
-        return " ".join(
-            [
-                t.text
-                for t in list(
-                    YouTubeTranscriptApi().fetch(
-                        str(self.video_id), languages=["fr", "en"]
-                    ),
-                )
-            ],
-        )
+        if not self.transcript:
+            self.transcript = " ".join(
+                [
+                    t.text
+                    for t in list(
+                        YouTubeTranscriptApi().fetch(
+                            str(self.video_id), languages=["fr", "en"]
+                        ),
+                    )
+                ],
+            )
+            self.save()
+
+        return self.transcript
 
     def get_video_link(self):
         return f"https://www.youtube.com/watch?v={self.video_id}"
@@ -111,6 +116,7 @@ class Playlist(Document):
     videos = ListField(ReferenceField(Video))
     published_date = DateTimeField()
     updated_at = DateTimeField()
+    channel = ReferenceField("Channel")
 
     meta = {
         "collection": "playlists",
@@ -166,21 +172,26 @@ class Playlist(Document):
 
             for item in data["items"]:
                 video_id = item["snippet"]["resourceId"]["videoId"]
+                title = item["snippet"]["title"]
 
-                try:
-                    video = Video.objects.get(video_id=video_id)
-                except DoesNotExist:
-                    video = Video(
-                        video_id=video_id,
-                        title=item["snippet"]["title"],
-                        description=item["snippet"]["description"],
-                        published_date=datetime.fromisoformat(
-                            item["snippet"]["publishedAt"].replace("Z", "+00:00")
-                        ),
-                    )
-                    video.save()
+                if title not in ("Private video", "Deleted video"):
+                    try:
+                        video = Video.objects.get(video_id=video_id)
+                    except DoesNotExist:
+                        video = Video(
+                            video_id=video_id,
+                            title=title,
+                            description=item["snippet"]["description"],
+                            published_date=datetime.fromisoformat(
+                                item["snippet"]["publishedAt"].replace("Z", "+00:00")
+                            ),
+                            channel=Channel.fetch_from_api(
+                                channel_id=item["snippet"]["videoOwnerChannelId"]
+                            ),
+                        )
+                        video.save()
 
-                videos.append(video)
+                    videos.append(video)
 
             next_page_token = data.get("nextPageToken")
             if not next_page_token:
@@ -198,6 +209,7 @@ class Playlist(Document):
                 published_date=datetime.fromisoformat(
                     playlist_data["publishedAt"].replace("Z", "+00:00")
                 ),
+                channel=Channel.from_id(playlist_data["channelId"]),
             )
 
         playlist.save()
@@ -267,7 +279,7 @@ class Channel(Document):
         if get_playlists:
             channel.playlists = channel.fetch_playlists_from_api()
 
-        if get_playlists:
+        if get_videos:
             channel.videos = channel.fetch_videos_from_api()
 
         channel.save()

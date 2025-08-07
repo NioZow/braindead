@@ -1,8 +1,12 @@
 import argparse
+import re
+from pathlib import Path
 
 from mongoengine import connect
 
-from brainless.config import MONGODB_URI
+from brainless.ai import convert_to_markdown, ctbb_summary
+from brainless.article import get_article_content
+from brainless.config import CTBB_NOTES_LOCATION, MONGODB_URI
 from brainless.handlers import *
 from brainless.youtube import *
 
@@ -65,6 +69,92 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def save(args):
+    if args.article:
+        text = get_article_content(args.article)
+    elif args.ctbb:
+        pattern = re.compile(r"(?:v=([\w\-]+))|(?:youtu\.be\/([\w\-]+))")
+        match = pattern.findall(args.ctbb)
+
+        if len(match) != 1:
+            print("Invalid youtube URL")
+            return
+
+        video_id = match[0][0] or match[0][1]
+
+        vid = Video.objects(video_id=video_id).get()
+
+        if vid.channel.name != "Critical Thinking - Bug Bounty Podcast":
+            raise Exception("not a video from CTBB")
+
+        pattern = re.compile(r"(?: \(Ep. (\d{1,3})\))$")
+
+        # get & format episode number
+        ep = pattern.findall(vid.title)[0]
+        ep = "0" * (3 - len(ep)) + ep
+
+        # format title
+        filename = (
+            f"{ep}-"
+            + re.sub(
+                r"(\-{2,})", "-", pattern.sub("", vid.title).lower().replace(" ", "-")
+            )
+            + ".md"
+        )
+
+        assert CTBB_NOTES_LOCATION != "", "Missing CTBB_NOTES_LOCATION env variable"
+        save_path = (
+            Path(CTBB_NOTES_LOCATION).expanduser().resolve() / "transcript" / filename
+        )
+
+        with open(save_path, "w") as f:
+            text = vid.fetch_transcript()
+            f.write(convert_to_markdown(text))
+
+    return
+
+
+def summarize(args):
+    if args.ctbb:
+        pattern = re.compile(r"(?:v=([\w\-]+))|(?:youtu\.be\/([\w\-]+))")
+        match = pattern.findall(args.ctbb)
+
+        if len(match) != 1:
+            print("Invalid youtube URL")
+            return
+
+        video_id = match[0][0] or match[0][1]
+
+        vid = Video.objects(video_id=video_id).get()
+
+        if vid.channel.name != "Critical Thinking - Bug Bounty Podcast":
+            raise Exception("not a video from CTBB")
+
+        pattern = re.compile(r"(?: \(Ep. (\d{1,3})\))$")
+
+        # get & format episode number
+        ep = pattern.findall(vid.title)[0]
+        ep = "0" * (3 - len(ep)) + ep
+
+        # format title
+        filename = (
+            f"{ep}-"
+            + re.sub(
+                r"(\-{2,})", "-", pattern.sub("", vid.title).lower().replace(" ", "-")
+            )
+            + ".md"
+        )
+
+        assert CTBB_NOTES_LOCATION != "", "Missing CTBB_NOTES_LOCATION env variable"
+        save_path = (
+            Path(CTBB_NOTES_LOCATION).expanduser().resolve() / "summary" / filename
+        )
+
+        with open(save_path, "w") as f:
+            transcript = vid.fetch_transcript()
+            f.write(ctbb_summary(transcript, vid.description) or "")
+
+
 def main():
     """Main entry point for the CLI application."""
     try:
@@ -80,14 +170,38 @@ def main():
         dest="action", help="Action to perform", required=True
     )
 
+    save_parser = subparsers.add_parser(
+        "save", help="Save an article or video transcript"
+    )
+
+    save_group = save_parser.add_mutually_exclusive_group(required=True)
+    save_group.add_argument("--article", "-a", help="Article to save")
+    save_group.add_argument("--video", "-v", help="Video to save")
+    save_group.add_argument(
+        "--ctbb", help="Video from the Critical Thinking Bug Bounty Poadcast"
+    )
+
+    summary_parser = subparsers.add_parser(
+        "sum", help="Summarize an article or video transcript"
+    )
+
+    sum_group = summary_parser.add_mutually_exclusive_group(required=True)
+    sum_group.add_argument("--article", "-a", help="Article to summarize")
+    sum_group.add_argument("--video", "-v", help="Video to summarize")
+    sum_group.add_argument(
+        "--ctbb", help="Video from the Critical Thinking Bug Bounty Poadcast"
+    )
+
     action_handlers = {
         "channel": ChannelHandler(subparsers),
         "playlist": PlaylistHandler(subparsers),
+        "save": save,
+        "sum": summarize,
     }
 
     args = parser.parse_args()
 
-    # for vid in Playlist.from_id("PL3KpgbgtXq6BRLAtAVsGNGAMto2lF7sHv").videos:
+    # for vid in Playlist.from_id("PLKpgbgtXq6BRLAtAVsGNGAMto2lF7sHv").videos:
     #     print(vid.fetch_transcript())
     #     return
 
@@ -96,7 +210,10 @@ def main():
 
     handler = action_handlers.get(args.action)
     if handler:
-        handler.dispatcher(args)
+        try:
+            handler.dispatcher(args)
+        except AttributeError:
+            handler(args)
     else:
         print_json_error(f"No handler implemented for action: {args.action}")
 
