@@ -3,12 +3,13 @@ import re
 from pathlib import Path
 
 from mongoengine import connect
+from newspaper import Article
 
-from brainless.ai import convert_to_markdown, ctbb_summary
+from brainless.ai import convert_to_markdown, ctbb_summary, sec_summary
 from brainless.article import get_article_content
-from brainless.config import CTBB_NOTES_LOCATION, MONGODB_URI
+from brainless.config import ARTICLES_NOTES_LOCATION, CTBB_NOTES_LOCATION, MONGODB_URI
 from brainless.handlers import *
-from brainless.youtube import *
+from brainless.youtube import Video
 
 
 def parse_arguments():
@@ -21,7 +22,7 @@ def parse_arguments():
         dest="action", help="Action to perform", required=True
     )
 
-    # Sub-parser for 'watch'
+    # sub-parser for 'watch'
     watch_parser = subparsers.add_parser("watch", help="Find and watch a video.")
     watch_parser.add_argument(
         "--unseen-only",
@@ -97,7 +98,9 @@ def save(args):
         filename = (
             f"{ep}-"
             + re.sub(
-                r"(\-{2,})", "-", pattern.sub("", vid.title).lower().replace(" ", "-")
+                r"(\-{2,})",
+                "-",
+                pattern.sub("", vid.title).lower().replace(" ", "-").replace(",", ""),
             )
             + ".md"
         )
@@ -153,6 +156,33 @@ def summarize(args):
         with open(save_path, "w") as f:
             transcript = vid.fetch_transcript()
             f.write(ctbb_summary(transcript, vid.description) or "")
+    elif args.article:
+        article = Article(args.article)
+        article.download()
+        article.parse()
+
+        filename = (
+            re.sub(
+                r"(\-{2,})",
+                "-",
+                re.sub(
+                    r"([\/:\.])",
+                    "",
+                    article.title.lower().replace(" ", "-"),
+                ),
+            )
+            + ".md"
+        )
+
+        assert ARTICLES_NOTES_LOCATION != "", (
+            "Missing ARTICLES_NOTES_LOCATION env variable"
+        )
+        save_path = (
+            Path(ARTICLES_NOTES_LOCATION).expanduser().resolve() / "summary" / filename
+        )
+
+        with open(save_path, "w") as f:
+            f.write(sec_summary(article.text, "") or "")
 
 
 def main():
@@ -200,13 +230,6 @@ def main():
     }
 
     args = parser.parse_args()
-
-    # for vid in Playlist.from_id("PLKpgbgtXq6BRLAtAVsGNGAMto2lF7sHv").videos:
-    #     print(vid.fetch_transcript())
-    #     return
-
-    # print(Channel.from_handle(handle="Hasheur"))
-    # print(Video.fetch_transcript_from_api("rvA8IbyogJ0"))
 
     handler = action_handlers.get(args.action)
     if handler:
