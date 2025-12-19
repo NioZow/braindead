@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
@@ -121,6 +121,11 @@ dependencies = [
     { name = "youtube-transcript-api" },
 ]
 
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "litellm", specifier = ">=1.75.0" },
@@ -133,10 +138,12 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "pymongo", specifier = ">=4.13.2" },
     { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "requests", specifier = ">=2.32.4" },
     { name = "youtube-transcript-api", specifier = ">=1.2.2" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "certifi"

@@ -2,14 +2,13 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from brainless.config import LITELLM_API_KEY, LITELLM_URI, OLLAMA_MODEL
-
-assert OLLAMA_MODEL != "", "Missing OLLAMA_MODEL env variable"
-assert LITELLM_URI != "", "Missing OLLAMA_MODEL env variable"
-assert LITELLM_API_KEY != "", "Missing OLLAMA_MODEL env variable"
+from brainless.config import LITELLM_API_KEY, LITELLM_URI
 
 
 def convert_to_markdown(text: str):
+    assert LITELLM_URI != "", "Missing LITELLM_URI env variable"
+    assert LITELLM_API_KEY != "", "Missing LITELLM_API_KEY env variable"
+
     system_prompt_path = Path("./prompts/convert_to_markdown.md")
     if not system_prompt_path.exists():
         raise ValueError("System prompt not found")
@@ -40,6 +39,9 @@ def convert_to_markdown(text: str):
 
 
 def sec_summary(resource: str, description: str):
+    assert LITELLM_URI != "", "Missing LITELLM_URI env variable"
+    assert LITELLM_API_KEY != "", "Missing LITELLM_API_KEY env variable"
+
     system_prompt_path = Path("./prompts/sec_summary.md")
     if not system_prompt_path.exists():
         raise ValueError("System prompt not found")
@@ -78,6 +80,9 @@ def sec_summary(resource: str, description: str):
 
 
 def ctbb_summary(transcript: str, description: str):
+    assert LITELLM_URI != "", "Missing LITELLM_URI env variable"
+    assert LITELLM_API_KEY != "", "Missing LITELLM_API_KEY env variable"
+
     system_prompt_path = Path("./prompts/ctbb_summary.md")
     if not system_prompt_path.exists():
         raise ValueError("System prompt not found")

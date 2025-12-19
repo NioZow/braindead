@@ -9,6 +9,7 @@ from brainless.ai import convert_to_markdown, ctbb_summary, sec_summary
 from brainless.article import get_article_content
 from brainless.config import ARTICLES_NOTES_LOCATION, CTBB_NOTES_LOCATION, MONGODB_URI
 from brainless.handlers import *
+from brainless.read.kindle import get_kindle_highlights
 from brainless.youtube import Video
 
 
@@ -185,6 +186,13 @@ def summarize(args):
             f.write(sec_summary(article.text, "") or "")
 
 
+def highlight(args):
+    if args.kindle:
+        get_kindle_highlights(args.file)
+    elif args.kobo:
+        pass
+
+
 def main():
     """Main entry point for the CLI application."""
     try:
@@ -211,6 +219,20 @@ def main():
         "--ctbb", help="Video from the Critical Thinking Bug Bounty Poadcast"
     )
 
+    highlight_parser = subparsers.add_parser(
+        "highlight", help="Get highlights from read books"
+    )
+    highlight_parser.add_argument(
+        "file", help="File to scrape highlights from.", type=Path
+    )
+    highlight_group = highlight_parser.add_mutually_exclusive_group(required=True)
+    highlight_group.add_argument(
+        "--kindle", help="Parse as HTML highlights from kindle.", action="store_true"
+    )
+    highlight_group.add_argument(
+        "--kobo", help="Parse as highlights from kobo reader.", action="store_true"
+    )
+
     summary_parser = subparsers.add_parser(
         "sum", help="Summarize an article or video transcript"
     )
@@ -227,6 +249,7 @@ def main():
         "playlist": PlaylistHandler(subparsers),
         "save": save,
         "sum": summarize,
+        "highlight": highlight,
     }
 
     args = parser.parse_args()

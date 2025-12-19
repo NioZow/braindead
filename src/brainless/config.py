@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -14,3 +15,6 @@ ARTICLES_NOTES_LOCATION = os.getenv("ARTICLES_NOTES_LOCATION") or ""
 
 MONGODB_URI = os.getenv("MONGODB_URI") or ""
 assert MONGODB_URI != "", "Missing MONGODB_URI env variable"
+
+# prompts
+PROMPT_PATH = Path(__file__).parent / "prompts"
