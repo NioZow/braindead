@@ -188,7 +188,7 @@ def summarize(args):
 
 def highlight(args):
     if args.kindle:
-        get_kindle_highlights(args.file)
+        get_kindle_highlights(args.file, dry_run=args.dry_run)
     elif args.kobo:
         pass
 
@@ -224,6 +224,9 @@ def main():
     )
     highlight_parser.add_argument(
         "file", help="File to scrape highlights from.", type=Path
+    )
+    highlight_parser.add_argument(
+        "--dry-run", "-d", help="Dry run", action="store_true"
     )
     highlight_group = highlight_parser.add_mutually_exclusive_group(required=True)
     highlight_group.add_argument(

@@ -1,6 +1,5 @@
 import re
 from pathlib import Path
-from typing import List
 
 from jinja2 import Template
 from lxml import html
@@ -24,7 +23,13 @@ def convert_to_filename(text: str):
     return re.sub(r"'", "", text.replace(" ", "-")).strip()
 
 
-def get_kindle_highlights(file: Path) -> List[str]:
+def get_kindle_highlights(file: Path, dry_run: bool = False):
+    """Get highlights from a kindle html file and ask an AI assistant to summarize it for my notes.
+
+    Args:
+        file: Path to the kindle file.
+        dry_run: Only show the prompt, do not make the AI assistant request.
+    """
     assert LITELLM_URI != "", "Missing LITELLM_URI env variable"
     assert LITELLM_API_KEY != "", "Missing LITELLM_API_KEY env variable"
 
@@ -72,6 +77,12 @@ def get_kindle_highlights(file: Path) -> List[str]:
         highlights="\n\n".join([f"- {h}" for h in highlights]),
     )
 
+    print(f'Found {len(highlights)} highlights for "{title}" by {author}.')
+
+    if dry_run:
+        print(f"Dry run:\n{prompt}")
+        return
+
     client = OpenAI(
         base_url=LITELLM_URI,
         api_key=LITELLM_API_KEY,
@@ -93,5 +104,3 @@ def get_kindle_highlights(file: Path) -> List[str]:
             f.write(notes)
     else:
         print("Assistant did not return anything.")
-
-    return highlights
