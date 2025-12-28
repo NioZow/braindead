@@ -10,6 +10,18 @@ cd braindead
 uv tool install .
 ```
 
+You then need to set up a configuration file at `~/.config/braindead/config.yml`.
+
+For example :
+
+```sh
+# yaml-language-server: $schema=https://raw.githubusercontent.com/NioZow/braindead/refs/heads/master/schemas/config.schema.json
+youtube_api_key: "redacted"
+litellm_uri: "https://api.openai.com/v1"
+litellm_api_key: "redacted"
+notes_triage_location: "~/notes/triage/"
+```
+
 ## Features
 
 ```
