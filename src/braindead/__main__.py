@@ -77,7 +77,8 @@ def summarize(args):
         author,
         content_type,
         args.url,
-        supplementary_info,
+        publish_date=publish_date,
+        supplementary_info=supplementary_info,
         dry_run=args.dry_run,
     )
 

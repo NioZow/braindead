@@ -15,13 +15,14 @@ def convert_to_filename(name: str):
             r"(\-{2,})",
             "-",
             re.sub(
-                r"([\/:\.'\",])",
+                r"([\/:\.'\",|?])",
                 "",
                 unicodedata.normalize("NFD", name)
                 .encode("ascii", "ignore")
                 .decode("ascii")
                 .lower()
-                .replace(" ", "-"),
+                .replace(" ", "-")
+                .replace("'", "-"),
             ),
         )
         + ".md"

@@ -14,6 +14,7 @@ Your goal is to create a comprehensive reference document that preserves key ins
 ## Source Information
 
 - **Title**: {{ title }}
+- **Date**: {{ publish_date }}
 - **Author/Creator**: {{ author }}
 - **Type**: {{ content_type }} (e.g., article, video, podcast, book, conference talk)
 - **Source URL**: {{ url }}

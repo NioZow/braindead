@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
@@ -64,9 +65,16 @@ def summarize_resource(
     author: str,
     content_type: str,
     url: str,
+    publish_date: Optional[datetime | str] = None,
     supplementary_info: Optional[str] = None,
     **kwargs,
 ):
+    formatted_date = ""
+    if isinstance(publish_date, str):
+        formatted_date = publish_date
+    elif isinstance(publish_date, datetime):
+        formatted_date = publish_date.strftime("%Y-%m-%d")
+
     return ask_ai_assistant(
         PROMPT_DIR / "summarize_resource.md",
         title=title,
@@ -75,6 +83,7 @@ def summarize_resource(
         url=url,
         main_content=main_content,
         supplementary_info=supplementary_info,
+        publish_date=formatted_date,
         **kwargs,
     )
 
