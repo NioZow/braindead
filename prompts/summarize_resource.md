@@ -188,23 +188,6 @@ For financial content:
 
 **Potential Challenges:** [Common pitfalls or considerations]
 
-## Tools, Technologies & Resources
-
-[Comprehensive list organized by category]
-
-**Software/Tools:**
-
-- **Tool Name** (version): Purpose, use case, and specific notes
-- **Platform Name**: Key features and applications discussed
-
-**Companies/Services:**
-
-- **Company Name**: What they do, metrics mentioned, why relevant
-
-**Frameworks/Methodologies:**
-
-- **Framework Name**: Core principles and application context
-
 ## Technical Details
 
 [For technical content - preserve all code snippets, commands, and configurations]
@@ -250,14 +233,6 @@ For financial content:
 - Core components
 - How to apply it
 - Example calculation or application
-
-## External Resources
-
-[Consolidated list of all referenced articles, papers, tools, books, documentation]
-
-- [Resource Title](URL): Description and relevance to main content
-- [Another Resource](URL): Key insights or information it provides
-- [Tool/Service Name](URL): Purpose and how it's used in context
 
 ## Key Takeaways
 
