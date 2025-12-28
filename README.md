@@ -41,9 +41,16 @@ options:
   --dry-run, -d         Dry run
 ```
 
-### Kindle highlights parser
+### Video/Article summarizer
 
-Parse kindle highlights create notes for a book out of it.
+```
+$ braindead summarize -v https://www.youtube.com/watch?v=Le0DLrn7ta0
+[+] Successfully written notes to ~/notes/triage/2025-12-16-a-deepdive-on-my-personal-ai-infrastructure-(pai-v20-december-2025).md.
+```
+
+### Kindle highlights summarizer
+
+Summarize kindle highlights create notes for a book out of it.
 
 You can go at `https://read.amazon.com/notebook` and "Save Page as..." and then use the following command to parse and ingest it.
 
