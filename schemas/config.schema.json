@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Braindead config",
+  "type": "object",
+  "properties": {
+    "youtube_api_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "litellm_uri": {
+      "type": "string",
+      "minLength": 1
+    },
+    "litellm_api_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes_triage_location": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "youtube_api_key",
+    "litellm_uri",
+    "litellm_api_key",
+    "notes_triage_location"
+  ],
+  "additionalProperties": false
+}

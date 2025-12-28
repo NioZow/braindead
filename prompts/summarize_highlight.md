@@ -4,8 +4,8 @@ You are helping process highlights from practical learning books into clean, org
 
 ## Book Information
 
-- **Title**: {{ book_title }}
-- **Author**: {{ book_author }}
+- **Title**: {{ title }}
+- **Author**: {{ author }}
 
 ## CRITICAL: Language Instruction
 
@@ -22,7 +22,7 @@ Detect the language from the highlights and match it exactly. Do NOT translate. 
 
 **Before processing the highlights, research this book to understand its context:**
 
-1. Search for "{{ book_title }}" by {{ book_author }} to find:
+1. Search for "{{ title }}" by {{ author }} to find:
    - Book summary and main themes
    - Chapter structure and organization
    - Key frameworks or methodologies presented
@@ -126,4 +126,4 @@ Structure your notes based on what you learned about the book's framework. Use t
 [Concrete next steps you could take based on this book]
 ```
 
-Please research the book first using available web tools, then process these highlights into well-organized markdown notes.lease process these highlights now, creating well-organized markdown notes.
+Please research the book first using available web tools, then process these highlights into well-organized markdown notes. Please process these highlights now, creating well-organized markdown notes.

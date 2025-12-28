@@ -1,5 +1,5 @@
 {
-  description = "Brainless flake";
+  description = "Braindead flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -15,7 +15,7 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
         python = pkgs.python313;
-        name = "brainless";
+        name = "braindead";
       in {
         packages.default = python.pkgs.buildPythonApplication {
           pname = name;

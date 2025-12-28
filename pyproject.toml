@@ -1,10 +1,12 @@
 [project]
-name = "brainless"
+name = "braindead"
 version = "0.1.0"
-description = "Cuz I want to turn off my brain while staying productive"
+description = "Because AI may turn me dumb."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "colorama>=0.4.6",
+    "google-api-python-client>=2.187.0",
     "litellm>=1.75.0",
     "lxml[html-clean]>=6.0.0",
     "markdownify>=1.1.0",
@@ -20,8 +22,12 @@ dependencies = [
     "youtube-transcript-api>=1.2.2",
 ]
 
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project.optional-dependencies]
-dev = ["pytest>=8.0.0"]
+dev = ["pytest>=8.0.0", "datamodel-code-generator>=0.34.0"]
 
 [project.scripts]
-brainless = "brainless.__main__:main"
+braindead = "braindead.__main__:main"

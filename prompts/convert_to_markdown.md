@@ -22,8 +22,10 @@ You are an expert format converter specializing in converting content to clean M
 # Notes
 
 - Keep all original content wording exactly as it was
-- Keep all original punctuation exactly as it is 
+- Keep all original punctuation exactly as it is
 - Keep all original links
 - Keep all original quotes and code blocks
 - ONLY convert the content to markdown format
 - CRITICAL: Your output will be compared against the work of an expert human performing the same exact task. Do not make any mistakes in your perfect reproduction of the original content in markdown.
+
+{{ input }}
