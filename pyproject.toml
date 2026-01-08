@@ -34,3 +34,6 @@ dev = ["pytest>=8.0.0", "datamodel-code-generator>=0.34.0"]
 
 [project.scripts]
 braindead = "braindead.__main__:main"
+
+[tool.setuptools.package-data]
+braindead = ["prompts/*.md"]

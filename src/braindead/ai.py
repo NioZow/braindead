@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Optional
 
@@ -7,6 +7,7 @@ from jinja2 import Template
 from openai import OpenAI
 
 from braindead.config import PROMPT_DIR, config
+from braindead.utils import format_duration
 
 
 def ask_ai_assistant(
@@ -92,6 +93,33 @@ def summarize_resource(
         publish_date=formatted_date,
         today_date=today,
         no_verify_ssl=no_verify_ssl,
+        **kwargs,
+    )
+
+
+def summarize_story(
+    podcast_transcript: str,
+    episode_title: str,
+    podcast_name: str,
+    url: str,
+    duration: Optional[timedelta],
+    publish_date: Optional[datetime | str] = None,
+    **kwargs,
+):
+    formatted_date = ""
+    if isinstance(publish_date, str):
+        formatted_date = publish_date
+    elif isinstance(publish_date, datetime):
+        formatted_date = publish_date.strftime("%Y-%m-%d")
+
+    return ask_ai_assistant(
+        PROMPT_DIR / "summarize_story.md",
+        podcast_transcript=podcast_transcript,
+        episode_title=episode_title,
+        podcast_name=podcast_name,
+        url=url,
+        duration=format_duration(duration) if duration is not None else "",
+        publish_date=formatted_date,
         **kwargs,
     )
 

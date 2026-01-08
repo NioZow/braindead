@@ -12,7 +12,8 @@ import yaml
 from .models import Config
 from .utils import convert_to_filename, logger
 
-PROMPT_DIR = Path(__file__).parent / "prompts"
+PROJECT_DIR = Path(__file__).resolve().parent
+PROMPT_DIR = PROJECT_DIR / "prompts"
 
 DATA_DIRECTORY = Path("~/.local/share/braindead/").expanduser()
 LOG_FILE = DATA_DIRECTORY / "braindead.log"

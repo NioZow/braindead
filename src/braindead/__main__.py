@@ -3,7 +3,12 @@ from pathlib import Path
 
 from newspaper import Article
 
-from braindead.ai import convert_to_markdown, summarize_highlight, summarize_resource
+from braindead.ai import (
+    convert_to_markdown,
+    summarize_highlight,
+    summarize_resource,
+    summarize_story,
+)
 from braindead.config import get_save_path
 from braindead.resources.kindle import parse_kindle_highlights
 from braindead.resources.youtube import fetch_video
@@ -60,6 +65,7 @@ def summarize(args):
         author = article.authors[0] if len(article.authors) > 0 else "Unknown"
         content_type = "Article"
         supplementary_info = None
+        duration = None
     elif args.video:
         video = fetch_video(args.url)
         text = video.transcript
@@ -68,23 +74,39 @@ def summarize(args):
         publish_date = video.publish_date
         content_type = "Video"
         supplementary_info = video.description
+        duration = video.duration
     else:
         return
 
-    response = summarize_resource(
-        text,
-        title,
-        author,
-        content_type,
-        args.url,
-        post_prompt=args.post_prompt,
-        publish_date=publish_date,
-        supplementary_info=supplementary_info,
-        dry_run=args.dry_run,
-        no_verify_ssl=args.no_verify_ssl,
-    )
-
     save_path = get_save_path(title, publish_date)
+
+    if args.template == "resource":
+        response = summarize_resource(
+            text,
+            title,
+            author,
+            content_type,
+            args.url,
+            post_prompt=args.post_prompt,
+            publish_date=publish_date,
+            supplementary_info=supplementary_info,
+            dry_run=args.dry_run,
+            no_verify_ssl=args.no_verify_ssl,
+        )
+    elif args.template == "story":
+        response = summarize_story(
+            podcast_transcript=text,
+            episode_title=title,
+            podcast_name=author,
+            url=args.url,
+            duration=duration,
+            publish_date=publish_date,
+            dry_run=args.dry_run,
+            no_verify_ssl=args.no_verify_ssl,
+        )
+    else:
+        return
+
     write_notes(save_path, response)
 
 
@@ -134,10 +156,10 @@ def main():
     summarize_parser = subparsers.add_parser( "summarize", help="Summarize an article or video transcript")
     summarize_parser.add_argument("url", help="Url of the video or article.")
     summarize_parser.add_argument("--post-prompt", "-p", help="Small text that will be appended after the prompt to have some custom stuff.")
+    summarize_parser.add_argument("--template", "-t", help="Prompt template to use (story or resource (default).)", default="resource", choices=["story", "resource"])
     summarize_group = summarize_parser.add_mutually_exclusive_group(required=True)
     summarize_group.add_argument("--article", "-a", help="Attached url is an article.", action="store_true")
     summarize_group.add_argument("--video", "-v", help="Attached url is a video.", action="store_true")
-    # fmt: on
 
     args = parser.parse_args()
     Dispatcher.dispatch(args)
