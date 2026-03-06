@@ -10,7 +10,6 @@ from braindead.config import PROMPT_DIR, config
 
 def ask_ai_assistant(
     prompt_path: Path,
-    model: str = "gemini/gemini-2.5-flash",
     dry_run: bool = False,
     **kwargs,
 ) -> Optional[str]:
@@ -27,8 +26,8 @@ def ask_ai_assistant(
     """
 
     client = OpenAI(
-        base_url=config.litellm_uri,
-        api_key=config.litellm_api_key,
+        base_url=config.openai_uri,
+        api_key=config.openai_api_key,
     )
 
     # load the template
@@ -43,7 +42,7 @@ def ask_ai_assistant(
         return
 
     response = client.chat.completions.create(
-        model=model,
+        model=config.model,
         messages=[
             {
                 "role": "user",

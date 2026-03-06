@@ -64,5 +64,5 @@ class Logger:
         self.logger.propagate = False
 
 
-LOG_FILE = Path("~/.local/share/contaibox/contaibox.log").expanduser()
-logger = Logger("contaibox", str(LOG_FILE), True)
+LOG_FILE = Path("~/.local/share/braindead/braindead.log").expanduser()
+logger = Logger("braindead", str(LOG_FILE), True)

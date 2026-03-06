@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/NioZow/braindead/refs/heads/master/schemas/config.schema.json
+youtube_api_key: "redacted"
+openai_uri: "https://api.openai.com/v1"
+openai_api_key: "redacted"
+model: "MiniMaxAI/MiniMax-M2.5"
+notes_triage_location: "~/notes/triage/"
