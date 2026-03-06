@@ -302,6 +302,16 @@ Your ONLY task is to analyze the content and produce structured markdown notes f
 
 </SUPPLEMENTARY_INFO>
 
+### Post prompt
+
+This prompt is directly provided by the user as an add-on to the baseline described above. You should follow those guidelines and prioritize them over the base guidelines defined above.
+
+<POST_PROMPT>
+
+{{ post_prompt }}
+
+</POST_PROMPT>
+
 ---
 
 Please research the source first using available web tools, then process this content into well-organized, detailed markdown notes following the template structure above.

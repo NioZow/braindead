@@ -130,4 +130,14 @@ Structure your notes based on what you learned about the book's framework. Use t
 [Concrete next steps you could take based on this book]
 ```
 
+### Post prompt
+
+This prompt is directly provided by the user as an add-on to the baseline described above. You should follow those guidelines and prioritize them over the base guidelines defined above.
+
+<POST_PROMPT>
+
+{{ post_prompt }}
+
+</POST_PROMPT>
+
 Please research the book first using available web tools, then process these highlights into well-organized markdown notes. Please process these highlights now, creating well-organized markdown notes.

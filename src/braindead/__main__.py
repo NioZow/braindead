@@ -77,6 +77,7 @@ def summarize(args):
         author,
         content_type,
         args.url,
+        post_prompt=args.post_prompt,
         publish_date=publish_date,
         supplementary_info=supplementary_info,
         dry_run=args.dry_run,
@@ -95,7 +96,11 @@ def highlight(args):
     print(f'Found {len(highlights)} highlights for "{title}" by {author}.')
 
     response = summarize_highlight(
-        title=title, author=author, highlights=highlights, dry_run=args.dry_run
+        title=title,
+        author=author,
+        highlights=highlights,
+        dry_run=args.dry_run,
+        post_prompt=args.post_prompt,
     )
 
     save_path = get_save_path(title)
@@ -112,6 +117,7 @@ def main():
 
     highlight_parser = subparsers.add_parser( "highlight", help="Get highlights from read books")
     highlight_parser.add_argument( "file", help="File to scrape highlights from.", type=Path)
+    highlight_parser.add_argument("--post-prompt", "-p", help="Small text that will be appended after the prompt to have some custom stuff.")
     highlight_group = highlight_parser.add_mutually_exclusive_group(required=True)
     highlight_group.add_argument( "--kindle", help="Parse as HTML highlights from kindle.", action="store_true")
     highlight_group.add_argument( "--kobo", help="Parse as highlights from kobo reader.", action="store_true")
@@ -124,6 +130,7 @@ def main():
 
     summarize_parser = subparsers.add_parser( "summarize", help="Summarize an article or video transcript")
     summarize_parser.add_argument("url", help="Url of the video or article.")
+    summarize_parser.add_argument("--post-prompt", "-p", help="Small text that will be appended after the prompt to have some custom stuff.")
     summarize_group = summarize_parser.add_mutually_exclusive_group(required=True)
     summarize_group.add_argument("--article", "-a", help="Attached url is an article.", action="store_true")
     summarize_group.add_argument("--video", "-v", help="Attached url is a video.", action="store_true")
