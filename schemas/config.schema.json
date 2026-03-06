@@ -26,8 +26,8 @@
   },
   "required": [
     "youtube_api_key",
-    "litellm_uri",
-    "litellm_api_key",
+    "openai_uri",
+    "openai_api_key",
     "notes_triage_location",
     "model"
   ],
