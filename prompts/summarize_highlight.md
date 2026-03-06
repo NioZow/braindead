@@ -72,6 +72,10 @@ Structure your notes based on what you learned about the book's framework. Use t
 ```markdown
 # [Book Title] by [Author]
 
+**Read date**: {{ today_date }}
+**Release date**: [Publication/creation date if available]
+**Domain**: [Primary topic area: Cybersecurity/Technology/Finance/Business/Productivity/AI-ML/etc.]
+
 ## Overview
 
 [2-3 sentence summary of the book's main premise and approach, informed by your research]

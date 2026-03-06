@@ -74,6 +74,8 @@ def summarize_resource(
     elif isinstance(publish_date, datetime):
         formatted_date = publish_date.strftime("%Y-%m-%d")
 
+    today = datetime.now().strftime("%Y-%m-%d")
+
     return ask_ai_assistant(
         PROMPT_DIR / "summarize_resource.md",
         title=title,
@@ -83,15 +85,19 @@ def summarize_resource(
         main_content=main_content,
         supplementary_info=supplementary_info,
         publish_date=formatted_date,
+        today_date=today,
         **kwargs,
     )
 
 
 def summarize_highlight(title: str, author: str, highlights: List[str], **kwargs):
+    today = datetime.now().strftime("%Y-%m-%d")
+
     return ask_ai_assistant(
         PROMPT_DIR / "summarize_highlight.md",
         title=title,
         author=author,
         highlights="\n\n".join([f"- {h}" for h in highlights]),
+        today_date=today,
         **kwargs,
     )

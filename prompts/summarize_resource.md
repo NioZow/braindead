@@ -14,7 +14,7 @@ Your goal is to create a comprehensive reference document that preserves key ins
 ## Source Information
 
 - **Title**: {{ title }}
-- **Date**: {{ publish_date }}
+- **Release date**: {{ publish_date }}
 - **Author/Creator**: {{ author }}
 - **Type**: {{ content_type }} (e.g., article, video, podcast, book, conference talk)
 - **Source URL**: {{ url }}
@@ -110,7 +110,8 @@ Structure your notes based on what you learned about the source and adapt to the
 # [Content Title] by [Author/Creator]
 
 **Source**: [URL or source type]  
-**Date**: [Publication/creation date if available]  
+**Read date**: {{ today_date }}
+**Release date**: [Publication/creation date if available]  
 **Domain**: [Primary topic area: Cybersecurity/Technology/Finance/Business/Productivity/AI-ML/etc.]
 
 ## Overview
