@@ -42,7 +42,7 @@ def save(args):
     else:
         return
 
-    response = convert_to_markdown(text, dry_run=args.dry_run)
+    response = convert_to_markdown(text, dry_run=args.dry_run, no_verify_ssl=args.no_verify_ssl)
 
     save_path = get_save_path(title, publish_date)
     write_notes(save_path, response)
@@ -81,6 +81,7 @@ def summarize(args):
         publish_date=publish_date,
         supplementary_info=supplementary_info,
         dry_run=args.dry_run,
+        no_verify_ssl=args.no_verify_ssl,
     )
 
     save_path = get_save_path(title, publish_date)
@@ -101,6 +102,7 @@ def highlight(args):
         highlights=highlights,
         dry_run=args.dry_run,
         post_prompt=args.post_prompt,
+        no_verify_ssl=args.no_verify_ssl,
     )
 
     save_path = get_save_path(title)
@@ -112,6 +114,7 @@ def main():
     # fmt: off
     parser = argparse.ArgumentParser(description="Braindead CLI for YouTube content management.")
     parser.add_argument("--dry-run", "-d", help="Dry run", action="store_true")
+    parser.add_argument("--no-verify-ssl", help="Disable SSL certificate verification for the AI server", action="store_true")
 
     subparsers = parser.add_subparsers(dest="action", help="Action to perform", required=True)
 

@@ -3,7 +3,6 @@ Load configuration files.
 """
 
 import os
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
@@ -13,8 +12,7 @@ import yaml
 from .models import Config
 from .utils import convert_to_filename, logger
 
-PROJECT_DIR = Path(sys.argv[0]).resolve().parent / ".." / ".."
-PROMPT_DIR = PROJECT_DIR / "prompts"
+PROMPT_DIR = Path(__file__).parent / "prompts"
 
 DATA_DIRECTORY = Path("~/.local/share/braindead/").expanduser()
 LOG_FILE = DATA_DIRECTORY / "braindead.log"
