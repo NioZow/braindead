@@ -11,6 +11,7 @@ class Config(BaseModel):
         extra="forbid",
     )
     youtube_api_key: str
-    litellm_uri: str
-    litellm_api_key: str
+    openai_uri: str
+    openai_api_key: str
+    model: str
     notes_triage_location: str

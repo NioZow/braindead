@@ -20,7 +20,11 @@ LOG_FILE = DATA_DIRECTORY / "contaibox.log"
 
 CONFIG_DIRECTORY = Path("~/.config/braindead").expanduser()
 
-os.makedirs(str(DATA_DIRECTORY), exist_ok=True)
+try:
+    os.makedirs(str(DATA_DIRECTORY), exist_ok=True)
+except (OSError, PermissionError) as e:
+    print(f"Warning: Could not create data directory {DATA_DIRECTORY}: {e}")
+
 
 
 def load_yaml_config(config_path: Path) -> Any:

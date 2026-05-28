@@ -11,7 +11,7 @@ from braindead.utils import format_duration
 
 def ask_ai_assistant(
     prompt_path: Path,
-    model: str = "gemini/gemini-2.5-flash",
+    model: str = config.model,
     dry_run: bool = False,
     **kwargs,
 ) -> Optional[str]:
@@ -28,8 +28,8 @@ def ask_ai_assistant(
     """
 
     client = OpenAI(
-        base_url=config.litellm_uri,
-        api_key=config.litellm_api_key,
+        base_url=config.openai_uri,
+        api_key=config.openai_api_key,
     )
 
     # load the template
