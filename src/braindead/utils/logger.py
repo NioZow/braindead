@@ -45,12 +45,16 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
 
         if self.filepath is not None:
-            file_handler = logging.FileHandler(self.filepath)
-            file_formatter = logging.Formatter(fmt="%(asctime)s [%(name)s] %(message)s")
-            file_handler.setFormatter(file_formatter)
-            file_handler.setLevel(logging.DEBUG)
-
-            self.logger.addHandler(file_handler)
+            try:
+                log_dir = Path(self.filepath).parent
+                log_dir.mkdir(parents=True, exist_ok=True)
+                file_handler = logging.FileHandler(self.filepath)
+                file_formatter = logging.Formatter(fmt="%(asctime)s [%(name)s] %(message)s")
+                file_handler.setFormatter(file_formatter)
+                file_handler.setLevel(logging.DEBUG)
+                self.logger.addHandler(file_handler)
+            except (OSError, PermissionError) as e:
+                print(f"Warning: Could not setup log file at {self.filepath}: {e}")
 
         std_handler = logging.StreamHandler()
         std_formatter = logging.Formatter(fmt="%(message)s")

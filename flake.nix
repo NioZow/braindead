@@ -19,7 +19,7 @@
       in {
         packages.default = python.pkgs.buildPythonApplication {
           pname = name;
-          version = "0.1.0";
+          version = "0.2.0";
           format = "pyproject";
 
           src = ./.;
@@ -56,14 +56,13 @@
           shellHook = ''
             export name="${name}"
 
-            if [ -f .venv/bin/activate ]; then
-              source .venv/bin/activate
-            else
+            if [ ! -f .venv/bin/activate ]; then
               uv venv
               uv pip install -e .
               uv pip install -e ".[dev]"
             fi
 
+            source .venv/bin/activate
             export PATH="$(pwd)/bin:$PATH"
           '';
         };
