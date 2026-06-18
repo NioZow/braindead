@@ -16,7 +16,7 @@ PROJECT_DIR = Path(__file__).resolve().parent
 PROMPT_DIR = PROJECT_DIR / "prompts"
 
 DATA_DIRECTORY = Path("~/.local/share/braindead/").expanduser()
-LOG_FILE = DATA_DIRECTORY / "contaibox.log"
+LOG_FILE = DATA_DIRECTORY / "braindead.log"
 
 CONFIG_DIRECTORY = Path("~/.config/braindead").expanduser()
 

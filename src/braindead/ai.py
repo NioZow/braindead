@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Optional
 
+import httpx
 from jinja2 import Template
 from openai import OpenAI
 
@@ -11,8 +12,8 @@ from braindead.utils import format_duration
 
 def ask_ai_assistant(
     prompt_path: Path,
-    model: str = config.model,
     dry_run: bool = False,
+    no_verify_ssl: bool = False,
     **kwargs,
 ) -> Optional[str]:
     """Ask an AI assistant for a response to a given prompt and data
@@ -27,9 +28,11 @@ def ask_ai_assistant(
         Response of the AI assistant, if any.
     """
 
+    http_client = httpx.Client(verify=not no_verify_ssl)
     client = OpenAI(
         base_url=config.openai_uri,
         api_key=config.openai_api_key,
+        http_client=http_client,
     )
 
     # load the template
@@ -44,7 +47,7 @@ def ask_ai_assistant(
         return
 
     response = client.chat.completions.create(
-        model=model,
+        model=config.model,
         messages=[
             {
                 "role": "user",
@@ -56,8 +59,8 @@ def ask_ai_assistant(
     return response.choices[0].message.content
 
 
-def convert_to_markdown(text: str, **kwargs) -> Optional[str]:
-    return ask_ai_assistant(PROMPT_DIR / "convert_to_markdown.md", input=text, **kwargs)
+def convert_to_markdown(text: str, no_verify_ssl: bool = False, **kwargs) -> Optional[str]:
+    return ask_ai_assistant(PROMPT_DIR / "convert_to_markdown.md", input=text, no_verify_ssl=no_verify_ssl, **kwargs)
 
 
 def summarize_resource(
@@ -68,6 +71,7 @@ def summarize_resource(
     url: str,
     publish_date: Optional[datetime | str] = None,
     supplementary_info: Optional[str] = None,
+    no_verify_ssl: bool = False,
     **kwargs,
 ):
     formatted_date = ""
@@ -75,6 +79,8 @@ def summarize_resource(
         formatted_date = publish_date
     elif isinstance(publish_date, datetime):
         formatted_date = publish_date.strftime("%Y-%m-%d")
+
+    today = datetime.now().strftime("%Y-%m-%d")
 
     return ask_ai_assistant(
         PROMPT_DIR / "summarize_resource.md",
@@ -85,6 +91,8 @@ def summarize_resource(
         main_content=main_content,
         supplementary_info=supplementary_info,
         publish_date=formatted_date,
+        today_date=today,
+        no_verify_ssl=no_verify_ssl,
         **kwargs,
     )
 
@@ -116,11 +124,15 @@ def summarize_story(
     )
 
 
-def summarize_highlight(title: str, author: str, highlights: List[str], **kwargs):
+def summarize_highlight(title: str, author: str, highlights: List[str], no_verify_ssl: bool = False, **kwargs):
+    today = datetime.now().strftime("%Y-%m-%d")
+
     return ask_ai_assistant(
         PROMPT_DIR / "summarize_highlight.md",
         title=title,
         author=author,
         highlights="\n\n".join([f"- {h}" for h in highlights]),
+        today_date=today,
+        no_verify_ssl=no_verify_ssl,
         **kwargs,
     )

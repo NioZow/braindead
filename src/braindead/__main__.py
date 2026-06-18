@@ -82,7 +82,7 @@ def save(args):
     else:
         return
 
-    response = convert_to_markdown(text, dry_run=args.dry_run)
+    response = convert_to_markdown(text, dry_run=args.dry_run, no_verify_ssl=args.no_verify_ssl)
 
     if args.json:
         print(json.dumps({"title": title, "content": response}, indent=2, ensure_ascii=False))
@@ -113,6 +113,8 @@ def summarize(args):
     else:
         return
 
+    save_path = get_save_path(title, publish_date)
+
     if args.template == "resource":
         response = summarize_resource(
             text,
@@ -120,9 +122,11 @@ def summarize(args):
             author,
             content_type,
             args.url,
+            post_prompt=args.post_prompt,
             publish_date=publish_date,
             supplementary_info=supplementary_info,
             dry_run=args.dry_run,
+            no_verify_ssl=args.no_verify_ssl,
         )
     elif args.template == "story":
         response = summarize_story(
@@ -133,6 +137,7 @@ def summarize(args):
             duration=duration,
             publish_date=publish_date,
             dry_run=args.dry_run,
+            no_verify_ssl=args.no_verify_ssl,
         )
     else:
         return
@@ -141,7 +146,6 @@ def summarize(args):
         print(json.dumps({"title": title, "content": response}, indent=2, ensure_ascii=False))
         return
 
-    save_path = get_save_path(title, publish_date)
     write_notes(save_path, response)
 
 def highlight(args):
@@ -153,7 +157,12 @@ def highlight(args):
     print(f'Found {len(highlights)} highlights for "{title}" by {author}.')
 
     response = summarize_highlight(
-        title=title, author=author, highlights=highlights, dry_run=args.dry_run
+        title=title,
+        author=author,
+        highlights=highlights,
+        dry_run=args.dry_run,
+        post_prompt=args.post_prompt,
+        no_verify_ssl=args.no_verify_ssl,
     )
 
     if args.json:
@@ -167,6 +176,7 @@ def main():
     """Main entry point for the CLI application."""
     parser = argparse.ArgumentParser(description="Braindead CLI for content management.")
     parser.add_argument("--dry-run", "-d", help="Dry run", action="store_true")
+    parser.add_argument("--no-verify-ssl", help="Disable SSL certificate verification for the AI server", action="store_true")
 
     subparsers = parser.add_subparsers(dest="action", help="Action to perform", required=True)
 
@@ -182,6 +192,7 @@ def main():
     # Highlight command
     highlight_parser = subparsers.add_parser("highlight", help="Get highlights from read books")
     highlight_parser.add_argument("file", help="File to scrape highlights from.", type=Path)
+    highlight_parser.add_argument("--post-prompt", "-p", help="Small text that will be appended after the prompt to have some custom stuff.")
     highlight_parser.add_argument("--json", help="Output as JSON", action="store_true")
     highlight_group = highlight_parser.add_mutually_exclusive_group(required=True)
     highlight_group.add_argument("--kindle", help="Parse as HTML highlights from kindle.", action="store_true")
@@ -198,6 +209,7 @@ def main():
     # Summarize command
     summarize_parser = subparsers.add_parser("summarize", help="Summarize an article or video transcript")
     summarize_parser.add_argument("url", help="Url of the video or article.")
+    summarize_parser.add_argument("--post-prompt", "-p", help="Small text that will be appended after the prompt to have some custom stuff.")
     summarize_parser.add_argument("--template", "-t", help="Prompt template to use (story or resource (default).)", default="resource", choices=["story", "resource"])
     summarize_parser.add_argument("--json", help="Output as JSON", action="store_true")
     summarize_group = summarize_parser.add_mutually_exclusive_group(required=True)
