@@ -43,6 +43,16 @@ Detect the language from the highlights and match it exactly. Do NOT translate. 
 
 {{ highlights }}
 
+## CRITICAL: Every Highlight Matters
+
+**The reader highlighted every single passage below for a reason. Your job is to figure out WHY each highlight was made and ensure the idea the reader wanted to remember ends up in the notes.**
+
+- **Zero highlights may be lost**: Every highlight represents a concept, fact, insight, or idea the reader deemed important enough to mark. ALL highlights must result in something meaningful in the final notes.
+- **Infer the purpose**: Ask yourself — why did the reader highlight this? What were they trying to remember? What concept, principle, or actionable idea is captured here? Write THAT into the notes.
+- **The reader wants to remember ideas**: The reader does not mind a long, comprehensive summary. What is unacceptable is reading a book and being unable to recall its concepts. The notes must serve as a complete memory aid.
+- **Comprehensiveness over brevity**: Do not skip, merge away, or dilute highlights to save space. If a highlight contains a distinct idea, it must appear distinctly in the notes. Synthesize only when multiple highlights truly express the exact same idea.
+- **Each highlight is a key**: Treat every highlighted passage as a key the reader has given you. Your output must contain the lock it opens — the concept, lesson, or idea they wanted to retain.
+
 ## Organization Guidelines
 
 1. **Identify the book's framework**: Many practical books have a clear methodology (e.g., "7 habits", "4-step process"). Use this as your primary structure if it exists.
@@ -57,7 +67,7 @@ Detect the language from the highlights and match it exactly. Do NOT translate. 
 
 6. **Add context where needed**: If your research revealed important context that makes a highlight clearer, add brief clarifying notes in [brackets].
 
-7. **Skip redundancy**: If multiple highlights say the same thing, synthesize into one clear point.
+7. **Skip only true redundancy**: If multiple highlights express the exact same idea in nearly identical terms, synthesize into one clear point. However, if two highlights convey different facets, examples, or nuances of a concept, preserve both. When in doubt, keep it.
 
 8. **Create reference sections**: Include sections for tools mentioned, key statistics, important formulas, or resource lists.
 

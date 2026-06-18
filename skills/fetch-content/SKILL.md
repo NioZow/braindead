@@ -44,24 +44,6 @@ braindead fetch <url> --video --json
 braindead fetch --file <path> --highlights --json
 ```
 
-### From Python
-
-```python
-from braindead.fetchers import fetch_article, fetch_video
-from braindead.parsers import parse_kindle_highlights
-
-# Article
-content = fetch_article("https://example.com/article")
-print(content.title, content.text)
-
-# Video
-content = fetch_video("https://youtube.com/watch?v=...")
-print(content.transcript, content.title)
-
-# Kindle highlights
-title, author, highlights = parse_kindle_highlights(Path("kindle.html"))
-```
-
 ## Output Schemas
 
 ### Article
