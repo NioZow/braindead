@@ -6,3 +6,4 @@ build/
 .direnv/
 bin/
 result
+.claude

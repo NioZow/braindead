@@ -5,6 +5,8 @@ from typing import Optional
 
 from colorama import Fore, Style
 
+from braindead.config import LOG_FILE
+
 
 class Logger:
     """Logging module"""
@@ -62,4 +64,5 @@ class Logger:
         self.logger.addHandler(std_handler)
         self.logger.propagate = False
 
-logger = None
+
+logger = Logger("braindead", str(LOG_FILE), True)

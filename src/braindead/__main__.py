@@ -9,10 +9,9 @@ from braindead.ai import (
     summarize_resource,
     summarize_story,
 )
-from braindead.config import get_save_path
 from braindead.resources.kindle import parse_kindle_highlights
 from braindead.resources.youtube import fetch_video
-from braindead.utils import logger, write_notes
+from braindead.utils import get_save_path, logger, write_notes
 
 
 class Dispatcher:
@@ -47,7 +46,9 @@ def save(args):
     else:
         return
 
-    response = convert_to_markdown(text, dry_run=args.dry_run, no_verify_ssl=args.no_verify_ssl)
+    response = convert_to_markdown(
+        text, dry_run=args.dry_run, no_verify_ssl=args.no_verify_ssl
+    )
 
     save_path = get_save_path(title, publish_date)
     write_notes(save_path, response)
