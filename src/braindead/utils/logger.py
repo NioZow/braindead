@@ -1,7 +1,6 @@
 """Logging module"""
 
 import logging
-from pathlib import Path
 from typing import Optional
 
 from colorama import Fore, Style
@@ -63,6 +62,4 @@ class Logger:
         self.logger.addHandler(std_handler)
         self.logger.propagate = False
 
-
-LOG_FILE = Path("~/.local/share/braindead/braindead.log").expanduser()
-logger = Logger("braindead", str(LOG_FILE), True)
+logger = None

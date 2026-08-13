@@ -22,6 +22,8 @@ CONFIG_DIRECTORY = Path("~/.config/braindead").expanduser()
 
 os.makedirs(str(DATA_DIRECTORY), exist_ok=True)
 
+from .utils.logger import Logger, logger
+logger = Logger("braindead", str(LOG_FILE), True)
 
 def load_yaml_config(config_path: Path) -> Any:
     # load the config

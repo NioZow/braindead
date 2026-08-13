@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "colorama>=0.4.6",
-    "google-api-python-client>=2.187.0",
+    "google-api-python-client>=2.185.0",
     "litellm>=1.75.0",
     "lxml[html-clean]>=6.0.0",
     "markdownify>=1.1.0",
@@ -34,6 +34,3 @@ dev = ["pytest>=8.0.0", "datamodel-code-generator>=0.34.0"]
 
 [project.scripts]
 braindead = "braindead.__main__:main"
-
-[tool.setuptools.package-data]
-braindead = ["prompts/*.md"]

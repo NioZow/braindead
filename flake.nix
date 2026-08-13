@@ -29,11 +29,21 @@
           nativeCheckInputs = [python.pkgs.pytest];
           propagatedBuildInputs = with python.pkgs; [
             colorama
-            docker
-            pyyaml
-            tabulate
-            jsonschema
+            google-api-python-client
+            litellm
+            lxml
+            lxml-html-clean
+            markdownify
+            mongoengine
+            newspaper3k
+            ollama
+            openai
             pydantic
+            pymongo
+            pytest
+            python-dotenv
+            requests
+            youtube-transcript-api
           ];
 
           # checkPhase = ''
