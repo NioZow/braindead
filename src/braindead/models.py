@@ -3,15 +3,31 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from pathlib import Path
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class Config(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    youtube_api_key: str
+    youtube_api_key: Optional[str] = None
+    youtube_api_key_path: Optional[str] = None
     openai_uri: str
     openai_api_key: str
     model: str
     notes_triage_location: str
+
+    @model_validator(mode="after")
+    def _resolve_youtube_api_key(self) -> "Config":
+        if not self.youtube_api_key:
+            if not self.youtube_api_key_path:
+                raise ValueError(
+                    "Either youtube_api_key or youtube_api_key_path must be set."
+                )
+            self.youtube_api_key = (
+                Path(self.youtube_api_key_path).expanduser().read_text().strip()
+            )
+        return self

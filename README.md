@@ -12,6 +12,8 @@ uv tool install .
 
 You then need to set up a configuration file at `~/.config/braindead/config.yml`. You can find an example configuration in `./config.yml.example`.
 
+The YouTube API key can be provided either inline via `youtube_api_key` or by pointing to a file with `youtube_api_key_path` (the file's contents are read and trimmed). One of the two is required; if both are set, `youtube_api_key` takes precedence.
+
 ## Features
 
 ```

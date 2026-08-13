@@ -7,11 +7,16 @@
       "type": "string",
       "minLength": 1
     },
+    "youtube_api_key_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path to a file containing the YouTube API key. Ignored if youtube_api_key is set."
+    },
     "openai_uri": {
       "type": "string",
       "minLength": 1
     },
-    "opeani_api_key": {
+    "openai_api_key": {
       "type": "string",
       "minLength": 1
     },
@@ -25,11 +30,14 @@
     }
   },
   "required": [
-    "youtube_api_key",
     "openai_uri",
     "openai_api_key",
     "notes_triage_location",
     "model"
+  ],
+  "anyOf": [
+    { "required": ["youtube_api_key"] },
+    { "required": ["youtube_api_key_path"] }
   ],
   "additionalProperties": false
 }
