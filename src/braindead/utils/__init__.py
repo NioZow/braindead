@@ -1,10 +1,8 @@
 import re
 import unicodedata
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from typing import Optional
-
-from braindead.config import config
 
 from .logger import logger
 
@@ -57,18 +55,6 @@ def format_duration(duration: timedelta) -> str:
         parts.append(f"{seconds}s")
 
     return " ".join(parts)
-
-
-def get_save_path(title: str, publish_date: Optional[datetime | str] = None):
-    formatted_date = ""
-    if isinstance(publish_date, str):
-        formatted_date = f"{publish_date}-"
-    elif isinstance(publish_date, datetime):
-        formatted_date = f"{publish_date.strftime('%Y-%m-%d')}-"
-
-    return Path(config.notes_triage_location).expanduser().resolve() / (
-        formatted_date + convert_to_filename(title)
-    )
 
 
 __all__ = ["logger"]

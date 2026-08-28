@@ -6,7 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class Config(BaseModel):
@@ -20,14 +20,22 @@ class Config(BaseModel):
     model: str
     notes_triage_location: str
 
-    @model_validator(mode="after")
-    def _resolve_youtube_api_key(self) -> "Config":
-        if not self.youtube_api_key:
-            if not self.youtube_api_key_path:
-                raise ValueError(
-                    "Either youtube_api_key or youtube_api_key_path must be set."
-                )
-            self.youtube_api_key = (
-                Path(self.youtube_api_key_path).expanduser().read_text().strip()
+    @field_validator("youtube_api_key", "youtube_api_key_path")
+    @classmethod
+    def validate_youtube_key(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        if not v.strip():
+            raise ValueError("must not be empty")
+        return v.strip()
+
+    def resolve_youtube_api_key(self) -> str:
+        key = self.youtube_api_key
+        if key is None and self.youtube_api_key_path is not None:
+            path = Path(self.youtube_api_key_path).expanduser()
+            key = path.read_text().strip()
+        if key is None:
+            raise ValueError(
+                "Either 'youtube_api_key' or 'youtube_api_key_path' must be set in config"
             )
-        return self
+        return key

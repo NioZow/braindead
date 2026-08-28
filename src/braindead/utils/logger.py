@@ -1,11 +1,10 @@
 """Logging module"""
 
 import logging
+from pathlib import Path
 from typing import Optional
 
 from colorama import Fore, Style
-
-from braindead.config import LOG_FILE
 
 
 class Logger:
@@ -46,12 +45,16 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
 
         if self.filepath is not None:
-            file_handler = logging.FileHandler(self.filepath)
-            file_formatter = logging.Formatter(fmt="%(asctime)s [%(name)s] %(message)s")
-            file_handler.setFormatter(file_formatter)
-            file_handler.setLevel(logging.DEBUG)
-
-            self.logger.addHandler(file_handler)
+            try:
+                log_dir = Path(self.filepath).parent
+                log_dir.mkdir(parents=True, exist_ok=True)
+                file_handler = logging.FileHandler(self.filepath)
+                file_formatter = logging.Formatter(fmt="%(asctime)s [%(name)s] %(message)s")
+                file_handler.setFormatter(file_formatter)
+                file_handler.setLevel(logging.DEBUG)
+                self.logger.addHandler(file_handler)
+            except (OSError, PermissionError) as e:
+                print(f"Warning: Could not setup log file at {self.filepath}: {e}")
 
         std_handler = logging.StreamHandler()
         std_formatter = logging.Formatter(fmt="%(message)s")
@@ -65,4 +68,5 @@ class Logger:
         self.logger.propagate = False
 
 
+LOG_FILE = Path("~/.local/share/braindead/braindead.log").expanduser()
 logger = Logger("braindead", str(LOG_FILE), True)

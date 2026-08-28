@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/NioZow/braindead/refs/heads/master/schemas/config.schema.json
-# Either youtube_api_key or youtube_api_key_path must be set. youtube_api_key
-# takes precedence if both are defined.
+# Use either youtube_api_key (the key itself) or youtube_api_key_path (path to a
+# file containing the key). Either one must be set; youtube_api_key takes
+# precedence if both are defined.
 youtube_api_key: "redacted"
 # youtube_api_key_path: "~/.config/braindead/youtube_api_key"
 openai_uri: "https://api.openai.com/v1"

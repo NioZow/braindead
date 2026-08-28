@@ -3,12 +3,14 @@ Load configuration files.
 """
 
 import os
+from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 
 from .models import Config
+from .utils import convert_to_filename, logger
 
 PROJECT_DIR = Path(__file__).resolve().parent
 PROMPT_DIR = PROJECT_DIR / "prompts"
@@ -18,7 +20,11 @@ LOG_FILE = DATA_DIRECTORY / "braindead.log"
 
 CONFIG_DIRECTORY = Path("~/.config/braindead").expanduser()
 
-os.makedirs(str(DATA_DIRECTORY), exist_ok=True)
+try:
+    os.makedirs(str(DATA_DIRECTORY), exist_ok=True)
+except (OSError, PermissionError) as e:
+    print(f"Warning: Could not create data directory {DATA_DIRECTORY}: {e}")
+
 
 
 def load_yaml_config(config_path: Path) -> Any:
@@ -28,9 +34,9 @@ def load_yaml_config(config_path: Path) -> Any:
             config = yaml.safe_load(f)
             return config
     except FileNotFoundError:
-        print(f"File {config_path} does not exist.")
+        logger.fatal_error(f"File {config_path} does not exist.")
     except yaml.YAMLError as e:
-        print(f"Failed to parse config of {config_path}: {e}.")
+        logger.fatal_error(f"Failed to parse config of {config_path}: {e}.")
 
 
 def load_config() -> Config:
@@ -40,3 +46,15 @@ def load_config() -> Config:
 
 
 config = load_config()
+
+
+def get_save_path(title: str, publish_date: Optional[datetime | str] = None):
+    formatted_date = ""
+    if isinstance(publish_date, str):
+        formatted_date = f"{publish_date}-"
+    elif isinstance(publish_date, datetime):
+        formatted_date = f"{publish_date.strftime('%Y-%m-%d')}-"
+
+    return Path(config.notes_triage_location).expanduser().resolve() / (
+        formatted_date + convert_to_filename(title)
+    )

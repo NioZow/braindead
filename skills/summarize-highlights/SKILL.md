@@ -1,3 +1,58 @@
+---
+name: summarize-highlights
+description: Convert book highlights, Kindle notes, and reading passages into structured comprehensive reference notes
+license: MIT
+metadata:
+  audience: researchers
+  workflow: content
+---
+
+# Book Highlights Synthesizer
+
+Specialized skill for converting book highlights and reading notes into structured, comprehensive reference notes organized by the book's framework and key concepts.
+
+## When to Load This Skill
+
+Load this skill when the user wants to process:
+
+- Kindle highlights
+- Book quotes and passages
+- Reading notes from books
+- Highlighted passages from practical learning books
+
+**Trigger phrases**:
+
+- "book highlights"
+- "kindle highlights"
+- "process my highlights"
+- "synthesis of notes"
+- "book notes"
+- "reading notes"
+- "summarize these highlights"
+- User provides list of book quotes/highlights
+
+## Content Domains Covered
+
+- **Technology & Programming**: Technical books, programming guides, software development
+- **Business & Entrepreneurship**: Business strategy, startups, management, leadership
+- **Productivity & Self-Development**: Habits, systems, mental models, productivity frameworks
+- **Finance**: Investment books, trading strategies, financial literacy
+- **Learning & Education**: Learning techniques, skill development, cognitive science
+- Any practical, actionable non-fiction content
+
+## How to Use This Skill
+
+1. **Gather content**: Get the list of book highlights or reading notes
+2. **Prepare metadata**: Extract book title and author if available
+3. **Apply prompt template**: Use the following prompt with the highlights and book information
+4. **Research context**: Optionally research the book for better organization
+5. **Format output**: Return as book-focused structured markdown notes
+
+## Prompt Template
+
+Use this prompt template when processing book highlights:
+
+````
 # Task: Convert Book Highlights to Structured Reference Notes
 
 You are helping process highlights from practical learning books into clean, organized markdown notes. These books cover topics like technology, cybersecurity, entrepreneurship, productivity, self development and business. Your goal is to create a comprehensive reference document that preserves key insights, strategies, and actionable advice.
@@ -82,10 +137,6 @@ Structure your notes based on what you learned about the book's framework. Use t
 ```markdown
 # [Book Title] by [Author]
 
-**Read date**: {{ today_date }}
-**Release date**: [Publication/creation date if available]
-**Domain**: [Primary topic area: Cybersecurity/Technology/Finance/Business/Productivity/AI-ML/etc.]
-
 ## Overview
 
 [2-3 sentence summary of the book's main premise and approach, informed by your research]
@@ -138,16 +189,33 @@ Structure your notes based on what you learned about the book's framework. Use t
 ## Action Items
 
 [Concrete next steps you could take based on this book]
-```
-
-### Post prompt
-
-This prompt is directly provided by the user as an add-on to the baseline described above. You should follow those guidelines and prioritize them over the base guidelines defined above.
-
-<POST_PROMPT>
-
-{{ post_prompt }}
-
-</POST_PROMPT>
+````
 
 Please research the book first using available web tools, then process these highlights into well-organized markdown notes. Please process these highlights now, creating well-organized markdown notes.
+
+```
+
+## Expected Output Format
+
+The output should be:
+- Pure markdown with no preamble or postamble
+- Organized according to the book's framework or chapter structure
+- Preserved quotes, numbers, and specific details
+- Well-organized sections including strategies, tools, key takeaways
+- In the same language as the input highlights
+- Saveable directly as a .md file
+
+## Integration Notes
+
+- Works with webfetch to research book context and structure
+- Can handle multiple languages properly
+- Inherits conversation context about the book
+- Sensitive to preserving actionable content and frameworks
+
+## Special Features
+
+- **Framework Detection**: Identifies and uses the book's natural structure
+- **Context Enhancement**: Researches book to add helpful context between highlights
+- **Actionability Focus**: Preserves strategies, tactics, and step-by-step processes
+- **Redundancy Handling**: Synthesizes duplicate points while preserving important details
+```

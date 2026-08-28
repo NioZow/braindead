@@ -1,25 +1,18 @@
 import re
 from pathlib import Path
 from typing import List
-
 from lxml import html
-
 
 def clean_highlight(text):
     """Clean highlight text for markdown list formatting."""
     return re.sub(r"[\x00-\x1f\x7f-\x9f]", "", re.sub(r"\s+", " ", text)).strip()
 
-
 def parse_kindle_highlights(file: Path) -> tuple[str, str, List[str]]:
-    """Get highlights from a kindle html file and ask an AI assistant to summarize it for my notes.
-
-    Args:
-        file: Path to the kindle file.
-
+    """Get highlights from a kindle html file.
+    
     Returns:
         Title of the book, its author and its highlights
     """
-    # open the html file containing highlights and parse it
     with open(file, "r") as f:
         tree = html.parse(f)
 
@@ -43,7 +36,6 @@ def parse_kindle_highlights(file: Path) -> tuple[str, str, List[str]]:
         .strip()
     )
 
-    # extract highlights
     highlights = [
         clean
         for node in highlight_nodes
